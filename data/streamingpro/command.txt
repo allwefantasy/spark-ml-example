@@ -1,0 +1,36 @@
+
+StreamingExample:
+
+
+./bin/spark-submit   --class streaming.core.StreamingApp \
+--master local[2] \
+--name test \
+/tmp/streamingpro-0.4.1-SNAPSHOT-online-1.6.1.jar    \
+-streaming.name test    \
+-streaming.job.file.path file:///tmp/streaming.json
+
+
+
+BatchExample:
+
+./bin/spark-submit   --class streaming.core.StreamingApp \
+--master local[2] \
+--name test \
+/tmp/streamingpro-0.4.1-SNAPSHOT-online-1.6.1.jar     \
+-streaming.name test    \
+-streaming.platform spark   \
+-streaming.job.file.path file:///tmp/batch.json
+
+
+QueryExample:
+
+./bin/spark-submit   --class streaming.core.StreamingApp \
+--master local[2] \
+--name sql-interactive \
+/tmp/streamingpro-0.4.1-SNAPSHOT-online-1.6.1.jar    \
+-streaming.name sql-interactive    \
+-streaming.job.file.path file:///tmp/query.json \
+-streaming.platform spark   \
+-streaming.rest true   \
+-streaming.driver.port 9004   \
+-streaming.spark.service true

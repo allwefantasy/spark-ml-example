@@ -1,0 +1,48 @@
+{
+  "jsonToCsv": {
+    "desc": "测试",
+    "strategy": "streaming.core.strategy.SparkStreamingStrategy",
+    "algorithm": [],
+    "ref": [],
+    "compositor": [
+      {
+        "name": "streaming.core.compositor.spark.source.SQLSourceCompositor",
+        "params": [
+          {
+            "format": "json",
+            "path": "file:///tmp/test.data"           
+          }
+        ]
+      },
+      {
+        "name": "streaming.core.compositor.spark.transformation.JSONTableCompositor",
+        "params": [
+          {
+            "tableName": "table1"
+          }
+        ]
+      },
+      {
+        "name": "streaming.core.compositor.spark.transformation.SQLCompositor",
+        "params": [
+          {
+            "sql": "select * from table1"
+          }
+        ]
+      },
+      {
+        "name": "streaming.core.compositor.spark.output.SQLOutputCompositor",
+        "params": [
+          {
+            "format": "com.databricks.spark.csv",
+            "path": "file:///tmp/csv-table1",
+            "header": "true",
+            "inferSchema": "true"
+          }
+        ]
+      }
+    ],
+    "configParams": {
+    }
+  }
+}
