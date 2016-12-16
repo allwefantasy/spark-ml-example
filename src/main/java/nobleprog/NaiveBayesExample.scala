@@ -9,7 +9,7 @@ import org.apache.spark.mllib.regression.LabeledPoint
 /**
  * 12/10/16 WilliamZhu(allwefantasy@gmail.com)
  */
-object NaiveBayesTest {
+object NaiveBayesExample {
   def main(args:Array[String]):Unit = {
 
     val conf = new SparkConf().setAppName("贝叶斯测试代码")
@@ -27,6 +27,8 @@ object NaiveBayesTest {
     val training = splits(0)
     val test = splits(1)
 
+    //这里有一个核心配置，如果是连续值，比如tf/idf 则建议使用Multinomial，如果feature 都是0/1 则使用
+    //Bernoulli
     val model = NaiveBayes.train(training, lambda = 1.0, modelType = "multinomial")
 
     val predictionAndLabel = test.map(p => (model.predict(p.features), p.label))

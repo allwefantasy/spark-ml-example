@@ -11,7 +11,7 @@ import org.apache.spark.sql.{SQLContext, Row}
  */
 object PipelineExample {
   def main(args: Array[String]) = {
-    val conf = new SparkConf().setAppName("逻辑回归测试代码")
+    val conf = new SparkConf().setAppName("PipelineExample")
     conf.setMaster("local[2]")
     val spark  = new SparkContext(conf)
     val sqlContext = SQLContext.getOrCreate(spark)
@@ -32,8 +32,8 @@ object PipelineExample {
       .setInputCol(tokenizer.getOutputCol)
       .setOutputCol("features")
     val lr = new LogisticRegression()
-      .setMaxIter(10)
-      .setRegParam(0.01)
+      .setMaxIter(10) //设置一个最大的迭代次数，避免收敛问题
+      .setRegParam(0.01)   //还记得这个参数么，正则化系数
     val pipeline = new Pipeline()
       .setStages(Array(tokenizer, hashingTF, lr))
 

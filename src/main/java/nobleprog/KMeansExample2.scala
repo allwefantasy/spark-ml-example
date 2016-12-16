@@ -1,6 +1,6 @@
 package nobleprog
 
-import com.stuq.chapter02.Mock
+
 import org.apache.spark.ml.clustering.{KMeans, KMeansModelPerJVM}
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
