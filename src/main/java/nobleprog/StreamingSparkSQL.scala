@@ -11,7 +11,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 object StreamingSparkSQL {
   def main(args: Array[String]): Unit = {
 
-    val conf = new SparkConf().setAppName("测试Streaming应用")
+    val conf = new SparkConf().setAppName("测试StreamingSQL应用")
     val isDebug = true
     val duration = 5
     if (isDebug) {
