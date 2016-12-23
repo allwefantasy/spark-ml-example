@@ -1,0 +1,59 @@
+{
+  "toParquet": {
+    "desc": "测试",
+    "strategy": "streaming.core.strategy.SparkStreamingStrategy",
+    "algorithm": [],
+    "ref": [],
+    "compositor": [
+      {
+        "name": "streaming.core.compositor.spark.source.MockJsonCompositor",
+        "params": [
+          {
+            "a": "http://123.com/path?userId=1&itemId=2"
+          },
+          {
+            "a": "http://123.com/path?userId=2&itemId=3"
+          },
+          {
+            "a": "http://123.com/path?userId=2&itemId=2"
+          },
+          {
+            "a": "http://123.com/path?userId=3&itemId=2"
+          }
+        ]
+      },
+      {
+        "name": "streaming.core.compositor.spark.transformation.JSONTableCompositor",
+        "params": [
+          {
+            "tableName": "test"
+          }
+        ]
+      },
+      {
+        "name": "streaming.core.compositor.spark.transformation.SQLCompositor",
+        "params": [
+          {
+            "sql": [
+              "select ",
+              "split(split(split(a,'\\?')[1],'&')[0],'=')[1] as user, ",
+              "split(split(split(a,'\\?')[1],'&')[1],'=')[1] as item ",
+              "from test"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "streaming.core.compositor.spark.output.SQLOutputCompositor",
+        "params": [
+          {
+            "format": "parquet",
+            "path": "file:///tmp/parquet-table1"
+          }
+        ]
+      }
+    ],
+    "configParams": {
+    }
+  }
+}
