@@ -1,6 +1,6 @@
 package nobleprog
 
-import com.stuq.chapter02.Mock
+
 import org.apache.spark.SparkConf
 import org.apache.spark.mllib.clustering.StreamingKMeans
 import org.apache.spark.mllib.linalg.Vectors
