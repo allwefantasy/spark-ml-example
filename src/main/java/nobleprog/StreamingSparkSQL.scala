@@ -44,7 +44,7 @@ object StreamingSparkSQL {
 
 
     ssc.start()
-    ssc.awaitTerminationOrTimeout(30 * 1000)
+    ssc.awaitTermination()
   }
 
 }

@@ -4,6 +4,8 @@ import org.apache.spark.sql.types._
 import org.apache.spark.sql.{Row, SQLContext}
 import org.apache.spark.{SparkConf, SparkContext}
 
+import scala.collection.mutable.ArrayBuffer
+
 /**
  * 16/12/16 WilliamZhu(allwefantasy@gmail.com)
  */
@@ -15,10 +17,15 @@ object BatchSparkSQL {
 
     val sqlContext = SQLContext.getOrCreate(sc)
 
+    val holder = new ArrayBuffer[String]()
     //解析成有格式的数据
-    val words = sc.textFile("data/core/word_count.txt").flatMap(f => f.split("\\s+")).
-      map(f => (f, 1)).
-      reduceByKey((a, b) => a + b)
+    val words = sc.textFile("data/core/word_count.txt").
+      flatMap(f => f.split("\\s+")).
+      map{f =>
+      holder += f
+      (f, 1)
+
+    }
 
     //转化为SQL支持的Row格式的数据
     val wordCount = words.map { item =>
@@ -35,7 +42,7 @@ object BatchSparkSQL {
     df.registerTempTable("words")
 
     //使用SQL查询
-    df.sqlContext.sql("select * from words").show()
+    df.sqlContext.sql("select word,sum(number) as countNum from words group by word").show()
 
     sc.stop()
   }

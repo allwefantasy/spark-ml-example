@@ -6,7 +6,7 @@
     "ref": [],
     "compositor": [
       {
-        "name": "streaming.core.compositor.spark.source.MockJsonCompositor",
+        "name": "streaming.core.compositor.spark.source.SQLSource",
         "params": [
           {
             "a": "http://123.com/path?userId=1&itemId=2"

@@ -14,11 +14,12 @@ object FirstSparkDemo {
     val words = sc.textFile("data/core/word_count.txt")
 
     val wordCount = words.flatMap(f => f.split("\\s+")).
-      map(f => (f, 1)).
-      reduceByKey((a, b) => a + b).map(f=>(f._2,f._1)).sortByKey(false,1)
+      map{
+      f =>
+        (f, 1)
+    }.reduceByKey((a, b) => a + b).map(f=>(f._2,f._1)).sortByKey(false,1)
 
-    wordCount.foreach { f =>
-      println(f._2 + "=>" + f._1)
-    }
+    wordCount.map(f=>s"${f._1}->${f._2}").saveAsTextFile("file:///tmp/2")
+    sc.stop()
   }
 }

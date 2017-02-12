@@ -1,7 +1,7 @@
 package nobleprog
 
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
-import org.apache.spark.sql.{Row, SQLContext}
+import org.apache.spark.sql.{SaveMode, Row, SQLContext}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.elasticsearch.spark.rdd.EsSpark
 
@@ -44,7 +44,7 @@ object ESExample {
 
     df.write.
       format("org.elasticsearch.spark.sql").
-      options(cfg).
+      options(cfg).mode(SaveMode.Overwrite).
       save()
 
     //读取数据
@@ -53,7 +53,7 @@ object ESExample {
 
     dfRead.registerTempTable("test")
 
-    sqlContext.sql("select * from test").foreach(f => println(f))
+    sqlContext.sql("select * from test").saveAsParquetFile("")
   }
 
 }
