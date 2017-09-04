@@ -29,13 +29,13 @@ object KMeansExample2 {
 
       import org.apache.spark.mllib.linalg.Vector
 
-      val predictDataFrame = df.map { k:Row =>
-        (k.getAs[Double]("id"), KMeansModelPerJVM.predict(k.getAs[Vector]("features")))
-      }
+//      val predictDataFrame = df.map { k:Row =>
+//        (k.getAs[Double]("id"), KMeansModelPerJVM.predict(k.getAs[Vector]("features")))
+//      }
 
-      predictDataFrame.foreach { f =>
-        println(s"${f._1} ${f._2} ")
-      }
+//      predictDataFrame.foreach { f =>
+//        println(s"${f._1} ${f._2} ")
+//      }
 
     }
 

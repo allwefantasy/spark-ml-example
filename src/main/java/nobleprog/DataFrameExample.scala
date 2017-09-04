@@ -38,7 +38,7 @@ object DataFrameExample {
     val ds = df.as[DC]
     println("-----dataset demo--------")
     //select sum(count) as kk from abc group by domain
-    ds.groupBy(_.word).agg(sum("number").as("kk").as[Long]).select(expr("kk").as[Long]).show(10)
+    //ds.groupBy(_.word).agg(sum("number").as("kk").as[Long]).select(expr("kk").as[Long]).show(10)
 
     println("-----dataset2 demo--------")
     ds.select(expr("number as kk1").as[Int], expr("word as domain").as[String]).select(expr("kk1").as[Int]).show()

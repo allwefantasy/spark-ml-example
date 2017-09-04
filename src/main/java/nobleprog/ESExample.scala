@@ -53,7 +53,7 @@ object ESExample {
 
     dfRead.registerTempTable("test")
 
-    sqlContext.sql("select * from test").saveAsParquetFile("")
+    sqlContext.sql("select * from test").write.parquet("")
   }
 
 }
