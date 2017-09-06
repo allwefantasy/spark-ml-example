@@ -39,7 +39,7 @@ object BatchSparkSQL {
     ))
 
     //注册表名
-    df.registerTempTable("words")
+    df.createOrReplaceTempView("words")
 
     //使用SQL查询
     df.sqlContext.sql("select word,sum(number) as countNum from words group by word").show()

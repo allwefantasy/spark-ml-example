@@ -36,7 +36,7 @@ object StreamingSparkSQL {
       ))
 
       //注册表名
-      df.registerTempTable("words")
+      df.createOrReplaceTempView("words")
 
       //使用SQL查询
       df.sqlContext.sql("select * from words").show()
