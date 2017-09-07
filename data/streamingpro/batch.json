@@ -1,43 +1,39 @@
 {
-  "jsonToCsv": {
+  "batch-console": {
     "desc": "测试",
-    "strategy": "streaming.core.strategy.SparkStreamingStrategy",
+    "strategy": "spark",
     "algorithm": [],
     "ref": [],
     "compositor": [
       {
-        "name": "streaming.core.compositor.spark.source.SQLSourceCompositor",
+        "name": "batch.sources",
         "params": [
           {
+            "path": "file:///tmp/hdfsfile/abc.txt",
             "format": "json",
-            "path": "file:///tmp/test.data"           
+            "outputTable": "test"
+
           }
         ]
       },
       {
-        "name": "streaming.core.compositor.spark.transformation.JSONTableCompositor",
+        "name": "batch.sql",
         "params": [
           {
-            "tableName": "table1"
+            "sql": "select * from test",
+            "outputTableName": "finalOutputTable"
           }
         ]
       },
       {
-        "name": "streaming.core.compositor.spark.transformation.SQLCompositor",
+        "name": "batch.outputs",
         "params": [
           {
-            "sql": "select * from table1"
-          }
-        ]
-      },
-      {
-        "name": "streaming.core.compositor.spark.output.SQLOutputCompositor",
-        "params": [
-          {
-            "format": "com.databricks.spark.csv",
-            "path": "file:///tmp/csv-table1",
-            "header": "true",
-            "inferSchema": "true"
+            "name":"jack",
+            "format": "console",
+            "path": "-",
+            "inputTableName": "finalOutputTable",
+            "mode":"Overwrite"
           }
         ]
       }

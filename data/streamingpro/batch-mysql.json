@@ -1,0 +1,41 @@
+{
+  "mysqlToParquet": {
+    "desc": "把mysql表同步到hdfs上",
+    "strategy": "spark",
+    "algorithm": [],
+    "ref": [],
+    "compositor": [
+      {
+        "name": "batch.sources",
+        "params": [
+          {
+            "url": "jdbc:mysql://127.0.0.1/alarm_test??zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&user=****&password=****",
+            "dbtable": "t_report",
+            "driver": "com.mysql.jdbc.Driver",
+            "path": "-",
+            "format": "jdbc",
+            "partitionColumn": "id",
+            "lowerBound": "0",
+            "upperBound": "1000000",
+            "numPartitions": "1",
+            "outputTable": "t_r"
+          }
+        ]
+      },
+      {
+        "name": "batch.outputs",
+        "params": [
+          {
+            "format": "parquet",
+            "path": "file:///tmp/csv-table1",
+            "header": "true",
+            "inputTableName":"t_r",
+            "mode": "Overwrite"
+          }
+        ]
+      }
+    ],
+    "configParams": {
+    }
+  }
+}
