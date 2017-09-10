@@ -1,7 +1,7 @@
 package nobleprog
 
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
-import org.apache.spark.sql.{SaveMode, Row, SQLContext}
+import org.apache.spark.sql.{Row, SQLContext, SaveMode, SparkSession}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.elasticsearch.spark.rdd.EsSpark
 
@@ -10,12 +10,15 @@ import org.elasticsearch.spark.rdd.EsSpark
  */
 object ESExample {
   def main(args: Array[String]): Unit = {
-    val conf = new SparkConf().setAppName("BatchSparkSQL")
-    conf.setMaster("local[2]")
-    val sc = new SparkContext(conf)
+
+    val sparkSession = SparkSession.builder().appName("ESExample").
+      master("local[2]").
+      getOrCreate()
+
+
 
     //RDD API
-    val words = sc.textFile("data/core/word_count.txt").map(f => Map("a" -> f))
+    val words = sparkSession.sparkContext.textFile("data/core/word_count.txt").map(f => Map("a" -> f))
 
     val cfg = Map(
       "es.resource" -> "test/test",
@@ -25,9 +28,9 @@ object ESExample {
 
 
     //DataFrame API
-    val sqlContext = SQLContext.getOrCreate(sc)
+
     //解析成有格式的数据
-    val words2 = sc.textFile("data/core/word_count.txt").flatMap(f => f.split("\\s+")).
+    val words2 = sparkSession.sparkContext.textFile("data/core/word_count.txt").flatMap(f => f.split("\\s+")).
       map(f => (f, 1)).
       reduceByKey((a, b) => a + b)
 
@@ -37,7 +40,7 @@ object ESExample {
     }
 
     //注册数据源，Schema
-    val df = SQLContext.getOrCreate(sc).createDataFrame(wordCount, StructType(
+    val df = sparkSession.sqlContext.createDataFrame(wordCount, StructType(
       StructField("word", StringType, false) ::
         StructField("number", IntegerType, false) :: Nil
     ))
@@ -48,12 +51,13 @@ object ESExample {
       save()
 
     //读取数据
-    val dfRead = sqlContext.read.format("org.elasticsearch.spark.sql").
+    val dfRead = sparkSession.sqlContext.read.format("org.elasticsearch.spark.sql").
       options(cfg).load("test/test")
 
-    dfRead.registerTempTable("test")
+    dfRead.createOrReplaceTempView("test")
 
-    sqlContext.sql("select * from test").write.parquet("")
+    sparkSession.sqlContext.sql("select * from test").write.csv("/tmp/es-test")
+    sparkSession.stop()
   }
 
 }

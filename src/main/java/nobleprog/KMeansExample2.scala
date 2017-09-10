@@ -2,15 +2,15 @@ package nobleprog
 
 
 import org.apache.spark.ml.clustering.{KMeans, KMeansModelPerJVM}
-import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
-import org.apache.spark.sql.{DataFrame, Row, SQLContext}
+import org.apache.spark.sql.{DataFrame, Row, SQLContext, SparkSession}
 import org.apache.spark.streaming.{Seconds, StreamingContext, TestInputStream}
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
- * 6/29/16 WilliamZhu(allwefantasy@gmail.com)
- */
+  * 6/29/16 WilliamZhu(allwefantasy@gmail.com)
+  */
 object KMeansExample2 {
   def main(args: Array[String]): Unit = {
 
@@ -29,13 +29,13 @@ object KMeansExample2 {
 
       import org.apache.spark.mllib.linalg.Vector
 
-//      val predictDataFrame = df.map { k:Row =>
-//        (k.getAs[Double]("id"), KMeansModelPerJVM.predict(k.getAs[Vector]("features")))
-//      }
+      //      val predictDataFrame = df.map { k:Row =>
+      //        (k.getAs[Double]("id"), KMeansModelPerJVM.predict(k.getAs[Vector]("features")))
+      //      }
 
-//      predictDataFrame.foreach { f =>
-//        println(s"${f._1} ${f._2} ")
-//      }
+      //      predictDataFrame.foreach { f =>
+      //        println(s"${f._1} ${f._2} ")
+      //      }
 
     }
 
@@ -49,16 +49,9 @@ object KMeansExample2 {
 object KMeansExampleSaveModel {
   def main(args: Array[String]): Unit = {
 
-    val conf = new SparkConf().setAppName("测试Streaming应用")
-    val isDebug = true
-    val duration = 5
-    if (isDebug) {
-      conf.setMaster("local[2]")
-    }
-    val sc = new SparkContext(conf)
-    val sqlContext = SQLContext.getOrCreate(sc)
+    val sparkSession = SparkSession.builder().appName("测试Streaming应用").master("local[2]").getOrCreate()
 
-    val dataset: DataFrame = sqlContext.createDataFrame(Seq(
+    val dataset: DataFrame = sparkSession.createDataFrame(Seq(
       (1, Vectors.dense(0.0, 0.0, 0.0)),
       (2, Vectors.dense(0.1, 0.1, 0.1)),
       (3, Vectors.dense(0.2, 0.2, 0.2)),
@@ -76,7 +69,7 @@ object KMeansExampleSaveModel {
 
     model.save("/tmp/kmeans")
 
-    sc.stop()
+    sparkSession.stop()
 
   }
 }
