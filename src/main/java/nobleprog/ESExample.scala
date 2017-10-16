@@ -18,7 +18,9 @@ object ESExample {
 
 
     //RDD API
-    val words = sparkSession.sparkContext.textFile("data/core/word_count.txt").map(f => Map("a" -> f))
+    val words = sparkSession.sparkContext.
+      textFile("data/core/word_count.txt").
+      map(f => Map("a" -> f))
 
     val cfg = Map(
       "es.resource" -> "test/test",
@@ -56,7 +58,7 @@ object ESExample {
 
     dfRead.createOrReplaceTempView("test")
 
-    sparkSession.sqlContext.sql("select * from test").write.csv("/tmp/es-test")
+    sparkSession.sqlContext.sql("select * from test").write.csv("/tmp/es-test2")
     sparkSession.stop()
   }
 

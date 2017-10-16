@@ -7,6 +7,7 @@ StreamingExample:
 --name test \
 /tmp/streamingpro-spark-2.0-1.0.0.jar    \
 -streaming.name test    \
+-streaming.platform spark_streaming   \
 -streaming.job.file.path file:///tmp/streaming.json
 
 
@@ -32,5 +33,7 @@ QueryExample:
 -streaming.job.file.path file:///tmp/query.json \
 -streaming.platform spark   \
 -streaming.rest true   \
+-streaming.thrift true   \
+-streaming.enableHiveSupport true  \
 -streaming.driver.port 9004   \
 -streaming.spark.service true

@@ -15,11 +15,11 @@ object BugGame {
 
     val buffer = new ArrayBuffer[String]()
 
-    sc.textFile("path").map(f => f.split(",")).filter(f => f.length > 1).
+    sc.textFile("/tmp/abc").map(f => f.split(",")).filter(f => f.length > 1).
       map(f => buffer += f(0))
-
+    println("---------")
     buffer.foreach(println(_))
-
+    println("---------")
     sc.stop()
 
   }

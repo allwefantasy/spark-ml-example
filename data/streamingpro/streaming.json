@@ -28,7 +28,9 @@
         "name": "stream.sql",
         "params": [
           {
-            "sql": "select city from test left join sample on test.content == sample.name",
+            "sql": [
+              "select * from test"
+            ],
             "outputTableName": "test3"
           }
         ]

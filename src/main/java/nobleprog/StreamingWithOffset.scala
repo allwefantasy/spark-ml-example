@@ -1,6 +1,8 @@
 package nobleprog
 
 import kafka.serializer.StringDecoder
+import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
+import org.apache.spark.sql.{Row, SQLContext, SparkSession}
 import org.apache.spark.streaming.kafka.{HasOffsetRanges, KafkaUtils}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.streaming.scheduler.{StreamingListener, StreamingListenerBatchCompleted}
@@ -16,12 +18,15 @@ object StreamingWithOffset {
   def main(args: Array[String]): Unit = {
 
     val conf = new SparkConf().setAppName("测试StreamingSQL应用")
-    val duration = 5
+    val duration = 15
     conf.setMaster("local[2]")
     val ssc = new StreamingContext(conf, Seconds(duration))
     //ssc.addStreamingListener(new BatchStreamingListener(ssc.sparkContext))
     val kafkaParams = Map("metadata.broker.list" -> "127.0.0.1:9092")
-    KafkaUtils.createDirectStream[String,String,StringDecoder,StringDecoder](ssc, kafkaParams, Set("test2")).transform{ rdd =>
+    KafkaUtils.createDirectStream[String,String,StringDecoder,StringDecoder](
+      ssc, kafkaParams,
+      Set("test2")).
+      transform{ rdd =>
       val offsetRanges = rdd.asInstanceOf[HasOffsetRanges].offsetRanges
       for (o <- offsetRanges) {
         println(
@@ -30,7 +35,14 @@ object StreamingWithOffset {
       }
       rdd
     }.map(f => f).foreachRDD { rdd =>
-      println(s"周期内容数： ${rdd.count()}")
+      val sQLContext = SQLContext.getOrCreate(rdd.sparkContext)
+      val wordCount = rdd.map(f=>f._2).map{ item =>
+        Row.fromSeq(Seq(item))
+      }
+      val df = sQLContext.createDataFrame(wordCount,StructType(
+        StructField("word", StringType, false) :: Nil))
+      df.createOrReplaceTempView("time_chunk")
+      sQLContext.sql("select * from time_chunk ").show()
     }
 
     ssc.start()

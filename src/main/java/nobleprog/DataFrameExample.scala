@@ -36,6 +36,7 @@ object DataFrameExample {
 
     import sqlContext.implicits._
     val ds = df.as[DC]
+    ds.filter(f=>f.number>3).write.csv("/tmp/test")
     println("-----dataset demo--------")
     //select sum(count) as kk from abc group by domain
     //ds.groupBy(_.word).agg(sum("number").as("kk").as[Long]).select(expr("kk").as[Long]).show(10)

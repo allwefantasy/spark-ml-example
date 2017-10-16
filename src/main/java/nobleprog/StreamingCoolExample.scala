@@ -39,7 +39,8 @@ object StreamingCoolExample {
         rdd.partitionBy(new Partitioner {
           override def numPartitions: Int = pathToIndexDis.value.size
 
-          override def getPartition(key: Any): Int = pathToIndexDis.value(key.toString)
+          override def getPartition(key: Any): Int =
+            pathToIndexDis.value(key.toString)
         }).mapPartitionsWithIndex((index, partitionData) => {
           val path = indexToPathDis.value(index)
           val fileName = duratioinTime.milliseconds + "_" + index

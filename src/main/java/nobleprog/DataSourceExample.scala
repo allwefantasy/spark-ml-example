@@ -32,6 +32,7 @@ object DataSourceExample {
     ))
 
     df.write.format("parquet").options(Map("path" -> "file:///tmp/data_source_example")).save()
+    sqlContext.read.parquet()
 
     val newDF = sqlContext.read.format("parquet").options(Map("path" -> "file:///tmp/data_source_example")).load()
     //注册表名

@@ -9,10 +9,21 @@
         "name": "batch.sources",
         "params": [
           {
-            "path": "file:///tmp/hdfsfile/abc.txt",
+            "url": "jdbc:mysql://127.0.0.1:3306/alarm_test?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&user=root&password=csdn.net",
+            "dbtable": "t_report",
+            "driver": "com.mysql.jdbc.Driver",
+            "path": "-",
+            "format": "jdbc",
+            "partitionColumn":"id",
+            "lowerBound":"22755",
+            "upperBound":"14704783",
+            "numPartitions":"6",
+            "outputTable": "tr"
+          },
+          {
+            "path": "/tmp/json",
             "format": "json",
-            "outputTable": "test"
-
+            "outputTable": "a1"
           }
         ]
       },
@@ -20,8 +31,8 @@
         "name": "batch.sql",
         "params": [
           {
-            "sql": "select * from test",
-            "outputTableName": "finalOutputTable"
+            "sql": "select * from tr  union select * from a1",
+            "outputTableName": "new_tr"
           }
         ]
       },
@@ -29,11 +40,11 @@
         "name": "batch.outputs",
         "params": [
           {
-            "name":"jack",
+            "name": "jack",
             "format": "console",
             "path": "-",
-            "inputTableName": "finalOutputTable",
-            "mode":"Overwrite"
+            "inputTableName": "new_tr",
+            "mode": "Overwrite"
           }
         ]
       }
